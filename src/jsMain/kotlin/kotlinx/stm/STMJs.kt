@@ -2,12 +2,13 @@ package kotlinx.stm
 
 actual object STMSearcher {
     actual fun getSTM() = object : STM() {
-        override fun <T> startTransaction(currentTransactionId: Long?, block: (Long) -> T): Long = 0L
+        override fun getContext(): STMContext? = DummySTMContext
 
-        override fun <T> tryCommitTransaction(currentTransactionId: Long, block: (Long) -> T): Pair<T, Boolean> =
-            Pair(block(currentTransactionId), true)
+        override fun <T> tryCommitTransaction(
+            transactionContext: STMContext?,
+            block: STMContext.() -> T
+        ): Pair<T, Boolean> = Pair(DummySTMContext.block(), true)
 
-        override fun <T> wrap(initValue: T): UniversalDelegate<T> = DummyDelegate(initValue, this)
-
+        override fun <T> wrap(initValue: T) = DummyDelegate(initValue, this)
     }
 }

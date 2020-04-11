@@ -1,73 +1,114 @@
 package kotlinx.stm
 
+interface STMContext
+
 interface UniversalDelegate<T> {
     val stm: STM
 
-    fun unpack(): T
+    fun unpack(ctx: STMContext): T
 
-    fun unpackTransactional(): T
+    fun unpackTransactional(ctx: STMContext): T
 
-    fun pack(value: T)
+    fun pack(value: T, ctx: STMContext)
 
-    fun packTransactional(value: T)
+    fun packTransactional(value: T, ctx: STMContext)
 }
 
-open class DummyDelegate<T>(protected var t: T, override val stm: STM) : UniversalDelegate<T> {
+object DummySTMContext : STMContext
 
-    override fun unpack(): T = t
+open class DummyDelegate<T>(private var t: T, override val stm: STM) : UniversalDelegate<T> {
+    override fun unpack(ctx: STMContext): T = t
 
-    override fun unpackTransactional(): T = unpack()
+    override fun unpackTransactional(ctx: STMContext): T = unpack(ctx)
 
-    override fun pack(value: T) {
+    override fun pack(value: T, ctx: STMContext) {
         t = value
     }
 
-    override fun packTransactional(value: T) = pack(value)
-
+    override fun packTransactional(value: T, ctx: STMContext) = pack(value, ctx)
 }
 
+@Suppress("UNCHECKED_CAST")
 abstract class STM {
+
+    protected open fun <T> beforeTransaction(context: STMContext?, block: STMContext.() -> T) {}
+
     // returns: new transaction id
-    protected abstract fun <T> startTransaction(currentTransactionId: Long? = null, block: (Long) -> T): Long
+    protected abstract fun getContext(): STMContext?
 
-    protected abstract fun <T> tryCommitTransaction(currentTransactionId: Long, block: (Long) -> T): Pair<T, Boolean>
+    protected abstract fun <T> tryCommitTransaction(
+        transactionContext: STMContext?,
+        block: STMContext.() -> T
+    ): Pair<T?, Boolean>
 
-    fun <T> runAtomically(currentTransactionId: Long? = null, block: (Long) -> T): T {
-        val newTransactionId = startTransaction(currentTransactionId, block)
+    fun <T> runAtomically(context: STMContext? = null, block: STMContext.() -> T): T {
+        beforeTransaction(context, block)
         while (true) {
-            val (res, ok) = tryCommitTransaction(newTransactionId, block)
-            if (ok) return res
+            val (res, ok) = tryCommitTransaction(context, block)
+            if (ok) return res as T
         }
     }
 
     abstract fun <T> wrap(initValue: T): UniversalDelegate<T>
 
-    fun <T> getVar(currentTransactionId: Long? = null, delegate: UniversalDelegate<T>): T =
-        if (currentTransactionId == null)
-            runAtomically(currentTransactionId) { delegate.unpackTransactional() }
-        else
-            delegate.unpack()
+    fun <T> getVar(context: STMContext?, delegate: UniversalDelegate<T>): T =
+        context
+            ?.let(delegate::unpack)
+            ?: runAtomically { delegate.unpackTransactional(this) }
 
     fun <T> setVar(
-        currentTransactionId: Long? = null,
+        context: STMContext? = null,
         delegate: UniversalDelegate<T>,
         newValue: T
     ): Unit =
-        if (currentTransactionId == null)
-            runAtomically(currentTransactionId) {
-                delegate.packTransactional(newValue)
-            }
-        else
-            delegate.pack(newValue)
+        context
+            ?.let { delegate.packTransactional(newValue, it) }
+            ?: runAtomically { delegate.packTransactional(newValue, this) }
 
 }
 
+@Target(AnnotationTarget.CLASS)
 annotation class SharedMutable
+
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
+annotation class AtomicFunction
 
 expect object STMSearcher {
     fun getSTM(): STM
 }
 
-fun <T> runAtomically(stm: STM = STMSearcher.getSTM(), block: () -> T) = stm.runAtomically(null) {
-    block()
+fun <T> runAtomically(stm: STM = STMSearcher.getSTM(), block: STMContext.() -> T) =
+    stm.runAtomically(null, block)
+
+
+/*
+
+class C {
+   var x: Int
 }
+
+-->
+
+class C {
+  private val stm: STM
+
+  private x_delegate: Delegate<Int>
+
+  fun _get_x_shared(ctx: Context) = stm.getVar(ctx, x_delegate)
+  fun _set_x_shared(ctx: Context, newValue) { stm.setVar(ctx, x_delegate, newValue) }
+
+}
+
+###################
+usage:
+
+val c: C
+...
+
+c.x
+
+-->
+
+c._get_x_shared(ctx)
+
+*/

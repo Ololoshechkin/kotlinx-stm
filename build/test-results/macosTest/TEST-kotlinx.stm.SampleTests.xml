@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="kotlinx.stm.SampleTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-04-11T01:42:47" hostname="unit-1097.local" time="0.004">
+  <properties/>
+  <testcase name="testMe" classname="kotlinx.stm.SampleTests" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

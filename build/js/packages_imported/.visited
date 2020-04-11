@@ -1,0 +1,47 @@
+{
+  "version": "9",
+  "items": {
+    "a22f2a8552395b43b683ae772297cd7c": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.4-SNAPSHOT/kotlin-stdlib-common-1.4-SNAPSHOT.jar"
+    },
+    "1a758bf7f7778fce46e2cde7f41424a7": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-js/1.4-SNAPSHOT/kotlin-stdlib-js-1.4-SNAPSHOT.jar",
+      "target": "kotlin/1.4.0-SNAPSHOT"
+    },
+    "314e68164f37dd76b149295c0fc0e8d9": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-common/1.4-SNAPSHOT/kotlin-test-common-1.4-SNAPSHOT.jar"
+    },
+    "f5b9b97baabcb3fd043c7416a872238e": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-annotations-common/1.4-SNAPSHOT/kotlin-test-annotations-common-1.4-SNAPSHOT.jar"
+    },
+    "1c808d4e85b07da23cb811c414d28dba": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-js/1.4-SNAPSHOT/kotlin-test-js-1.4-SNAPSHOT.jar",
+      "target": "kotlin-test/1.4.0-SNAPSHOT"
+    },
+    "160dc5012f15aff29e3acfde4becf244": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-js-runner/1.4-SNAPSHOT/kotlin-test-js-runner-1.4-SNAPSHOT.jar",
+      "target": "kotlin-test-js-runner/1.4.0-SNAPSHOT"
+    },
+    "d7b8d7b6709db967a3a158c823d62a68": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-source-map-loader/1.4-SNAPSHOT/kotlin-source-map-loader-1.4-SNAPSHOT.jar",
+      "target": "kotlin-source-map-loader/1.4.0-SNAPSHOT"
+    },
+    "f72dfc17a5837b4a169638530705b0da": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.4-SNAPSHOT/kotlin-stdlib-common-1.4-SNAPSHOT.jar"
+    },
+    "5d749fb0a0cbf87ac3d21064d2b5dbbf": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-js/1.4-SNAPSHOT/kotlin-stdlib-js-1.4-SNAPSHOT.jar",
+      "target": "kotlin/1.4.0-SNAPSHOT"
+    },
+    "6d1c8d746eb3c754bfb8fc2d43453bb4": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-common/1.4-SNAPSHOT/kotlin-test-common-1.4-SNAPSHOT.jar"
+    },
+    "5655425ed148cfd7e935faa77fc3473c": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-annotations-common/1.4-SNAPSHOT/kotlin-test-annotations-common-1.4-SNAPSHOT.jar"
+    },
+    "97cb29d7a14d361d1d99e59cb1306366": {
+      "src": "/Users/jetbrains/.m2/repository/org/jetbrains/kotlin/kotlin-test-js/1.4-SNAPSHOT/kotlin-test-js-1.4-SNAPSHOT.jar",
+      "target": "kotlin-test/1.4.0-SNAPSHOT"
+    }
+  }
+}

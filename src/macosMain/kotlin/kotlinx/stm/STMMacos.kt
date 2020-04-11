@@ -22,15 +22,19 @@ class NativeSTM : STM() {
         }
     }
 
-    override fun <T> startTransaction(currentTransactionId: Long?, block: (Long) -> T): Long {
+    override fun getContext() = DummySTMContext
+
+    override fun <T> beforeTransaction(context: STMContext?, block: STMContext.() -> T) {
         if (!block.isFrozen) block.freeze()
         mtx.lock()
         transactionCounter.incrementAndGet()
-        return 0L
     }
 
-    override fun <T> tryCommitTransaction(currentTransactionId: Long, block: (Long) -> T): Pair<T, Boolean> {
-        val res = block(currentTransactionId)
+    override fun <T> tryCommitTransaction(
+        transactionContext: STMContext?,
+        block: STMContext.() -> T
+    ): Pair<T?, Boolean> {
+        val res = (transactionContext ?: getContext()).block()
         if (!res.isFrozen) res.freeze()
 
         if (transactionCounter.decrementAndGet() == 0) {
@@ -91,7 +95,12 @@ class NativeSTM : STM() {
             }
         }
 
-        override fun unpack(): T {
+        fun forcePack(value: Any?) {
+            updateCache(null)
+            changeDelegate(value as? T ?: throw IllegalArgumentException("Value $value must be of type T"))
+        }
+
+        override fun unpack(ctx: STMContext): T {
             val cached = cache.value
             if (cached == null) {
                 val curValue = attachDelegate()
@@ -102,18 +111,13 @@ class NativeSTM : STM() {
             }
         }
 
-        override fun pack(value: T) =
+        override fun pack(value: T, ctx: STMContext) =
             if (isCached)
                 putToCache(value)
             else
-                changeDelegate(value)
+            changeDelegate(value)
 
-        fun forcePack(value: Any?) {
-            updateCache(null)
-            changeDelegate(value as? T ?: throw IllegalArgumentException("Value $value must be of type T"))
-        }
-
-        override fun unpackTransactional(): T {
+        override fun unpackTransactional(ctx: STMContext): T {
             if (!isCached) {
                 stm.updateDelegates { delegates ->
                     Array(delegates.size + 1) { i ->
@@ -122,10 +126,10 @@ class NativeSTM : STM() {
                 }
             }
 
-            return unpack()
+            return unpack(ctx)
         }
 
-        override fun packTransactional(value: T) = pack(value)
+        override fun packTransactional(value: T, ctx: STMContext) = pack(value, ctx)
     }
 }
 

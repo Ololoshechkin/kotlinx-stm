@@ -1,0 +1,102 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.jetbrains.kotlinx",
+    "module": "kotlinx-stm-runtime",
+    "version": "0.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.0.1",
+      "buildId": "mtzlquqyajftnl7fl43knrlhwy"
+    }
+  },
+  "variants": [
+    {
+      "name": "js-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-js/0.0.1/kotlinx-stm-runtime-js-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-js",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "name": "js-runtime",
+      "attributes": {
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-js/0.0.1/kotlinx-stm-runtime-js-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-js",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "name": "jvm-api",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-jvm/0.0.1/kotlinx-stm-runtime-jvm-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-jvm",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "name": "jvm-runtime",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-jvm/0.0.1/kotlinx-stm-runtime-jvm-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-jvm",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "name": "macos-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "macos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-macos/0.0.1/kotlinx-stm-runtime-macos-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-macos",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-metadata/0.0.1/kotlinx-stm-runtime-metadata-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-metadata",
+        "version": "0.0.1"
+      }
+    }
+  ]
+}

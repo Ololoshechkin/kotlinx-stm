@@ -1,0 +1,75 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../kotlinx-stm-runtime/0.0.1/kotlinx-stm-runtime-0.0.1.module",
+    "group": "org.jetbrains.kotlinx",
+    "module": "kotlinx-stm-runtime",
+    "version": "0.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.0.1",
+      "buildId": "mtzlquqyajftnl7fl43knrlhwy"
+    }
+  },
+  "variants": [
+    {
+      "name": "macos-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "macos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core-native",
+          "version": {
+            "requires": "9995"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "atomicfu-native",
+          "version": {
+            "requires": "9995"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.4-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "kotlinx-stm-runtime.klib",
+          "url": "kotlinx-stm-runtime-macos-0.0.1.klib",
+          "size": 20229,
+          "sha512": "3cb6d8dd134ba42bdb9152a7412a5425fde43f4c848a5048c6ce38bd6f1baaa3a1bdff1aa311ae9d3e69549bdbe94144f1932702ce2cf40d6f4c719af31fd774",
+          "sha256": "981efd1c52ba04659c2ba5736b4997e089bf54f82a576e72c88ad8e5d7e57357",
+          "sha1": "8600f418e5cc39baecc27843948aa80433a89298",
+          "md5": "f679329729ec56d2bbd92b5573ca6d64"
+        }
+      ]
+    },
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "available-at": {
+        "url": "../../kotlinx-stm-runtime-metadata/0.0.1/kotlinx-stm-runtime-metadata-0.0.1.module",
+        "group": "org.jetbrains.kotlinx",
+        "module": "kotlinx-stm-runtime-metadata",
+        "version": "0.0.1"
+      }
+    }
+  ]
+}

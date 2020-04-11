@@ -1,0 +1,38 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../kotlinx-stm-runtime-macos/0.0.1/kotlinx-stm-runtime-macos-0.0.1.module",
+    "group": "org.jetbrains.kotlinx",
+    "module": "kotlinx-stm-runtime-macos",
+    "version": "0.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.0.1",
+      "buildId": "mtzlquqyajftnl7fl43knrlhwy"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadata-api",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "files": [
+        {
+          "name": "kotlinx-stm-runtime-metadata-0.0.1.jar",
+          "url": "kotlinx-stm-runtime-metadata-0.0.1.jar",
+          "size": 3837,
+          "sha512": "df20bac16337892682bafba907c07b6bf8680c04400f4d257e44e732739ff771890bb240c69e887e87f4832ed7dee54427b9a2c25dc4a2ebad7704030912213d",
+          "sha256": "251d7f17dc75a52bce6821ab0b6cce02fdc271c5bf7c28adc56bf037395031c9",
+          "sha1": "46a5782fdf12cf57cb09b8fb23ba6cacec4dcddf",
+          "md5": "c9d3a97eae0fec663adf9f91683df3bc"
+        }
+      ]
+    }
+  ]
+}

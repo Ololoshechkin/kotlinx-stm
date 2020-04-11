@@ -1,0 +1,1 @@
+// Kotlin.kotlin_module_metadata(393729, "kotlinx-stm-runtime-test", "H4sIAAAAAAAAAFWPvQrCQBCE7y+XdUQ4Uh1X2gvB2kYrCVipnY1FCvFMhFyhr2Hlo/g4Pop3RkSrnZlvFnYFcVLFk2OH/NgGf2gukF04Ybjen86+3tRd6KB7BDlvrtAhZqsaatscAlRyUKmH0c9OtcYgoWXtfVvMIAyDImY4NHEjLIuJjFoaFXWa2qaGNHl02tA75WZgmZN34mNnxVSUasGqkcmcKLNlfiNB+YNYZPRl+GP8RgoMzH1ecMN+TtJtL/s2bMP9AAAA");
