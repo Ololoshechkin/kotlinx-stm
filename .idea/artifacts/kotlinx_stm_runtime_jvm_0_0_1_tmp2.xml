@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kotlinx-stm-runtime-jvm-0.0.1-tmp2">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="kotlinx-stm-runtime-jvm-0.0.1-tmp2.jar">
+      <element id="module-output" name="org.jetbrains.kotlinx.kotlinx-stm-runtime.jvmMain" />
+    </root>
+  </artifact>
+</component>

@@ -1,12 +1,12 @@
 pluginManagement {
     repositories {
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-
-        mavenCentral()
-
-        maven { url 'https://plugins.gradle.org/m2/' }
-
         mavenLocal()
+        maven { url "https://kotlin.bintray.com/kotlin-dev" }
+        maven { url 'https://kotlin.bintray.com/kotlin-eap' }
+        maven { url 'https://kotlin.bintray.com/kotlinx' }
+        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
+        jcenter()
+        gradlePluginPortal()
     }
 }
 rootProject.name = 'kotlinx-stm-runtime'

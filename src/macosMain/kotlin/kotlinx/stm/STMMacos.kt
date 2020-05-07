@@ -65,7 +65,7 @@ class NativeSTM : STM() {
 
         constructor(initValue: T, stm: NativeSTM = STMSearcher.getSTM() as NativeSTM) : this(stm) {
             initValue.freeze()
-            delegate.compareAndSet(null, DetachedObjectGraph { initValue as Any? })
+            delegate.compareAndSet(null, DetachedObjectGraph { initValue as Any?  })
             this.freeze()
         }
 
