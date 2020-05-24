@@ -1,238 +1,27 @@
-buildscript {
+subprojects {
+    apply plugin: 'maven'
+    apply plugin: 'base'
+    apply plugin: 'maven-publish'
+
     repositories {
-        maven {
-            url "https://kotlin.bintray.com/kotlin-dev"
-            credentials {
-                username = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER') ?: ""
-                password = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY') ?: ""
-            }
-        }
+        mavenLocal()
+        maven { url "https://kotlin.bintray.com/kotlin-dev" }
+        maven { url 'https://dl.bintray.com/ololoshechkin/kotlinx-stm-runtime' }
+        maven { url 'https://kotlin.bintray.com/kotlin-eap' }
+        maven { url 'https://kotlin.bintray.com/kotlinx' }
+        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
+        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
 
+subprojects {
+    def GROUP_ID = 'org.jetbrains.kotlinx'
+    def LIBRARY_VERSION_NAME = '0.0.1-tmp5'
 
-plugins {
-    id 'org.jetbrains.kotlin.multiplatform' version '1.4-M1'
+    group GROUP_ID
+    version LIBRARY_VERSION_NAME
+
+    ext.kotlin_version = property('kotlin.version')
 }
-
-apply plugin: 'maven'
-apply plugin: 'base'
-apply plugin: 'maven-publish'
-
-repositories {
-    mavenLocal()
-    maven { url "https://kotlin.bintray.com/kotlin-dev" }
-    maven { url 'https://dl.bintray.com/ololoshechkin/kotlinx-stm-runtime' }
-    maven { url 'https://kotlin.bintray.com/kotlin-eap' }
-    maven { url 'https://kotlin.bintray.com/kotlinx' }
-    maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
-    jcenter()
-    mavenCentral()
-    gradlePluginPortal()
-}
-
-def GROUP_ID = 'org.jetbrains.kotlinx'
-def LIBRARY_VERSION_NAME = '0.0.1-tmp2'
-
-
-group GROUP_ID
-version LIBRARY_VERSION_NAME
-
-kotlin {
-    jvm()
-    js {
-        browser {
-        }
-        nodejs {
-        }
-    }
-    // For ARM, should be changed to iosArm32 or iosArm64
-    // For Linux, should be changed to e.g. linuxX64
-    // For MacOS, should be changed to e.g. macosX64
-    // For Windows, should be changed to e.g. mingwX64
-    macosX64("macos")
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation kotlin('stdlib-common')
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('stdlib-common')
-                implementation kotlin('test-annotations-common')
-            }
-        }
-        jvmMain {
-            dependencies {
-                implementation kotlin('stdlib-jdk8')
-                implementation('org.scala-stm:scala-stm_2.11:0.7')
-            }
-        }
-        jvmTest {
-            dependencies {
-                implementation kotlin('test')
-                implementation kotlin('test-junit')
-                implementation('org.scala-stm:scala-stm_2.11:0.7')
-            }
-        }
-        jsMain {
-            dependencies {
-                implementation kotlin('stdlib-js')
-            }
-        }
-        jsTest {
-            dependencies {
-                implementation kotlin('test-js')
-            }
-        }
-        macosMain {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:atomicfu:0.14.3-1.4-M1")
-            }
-        }
-        macosTest {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:atomicfu:0.14.3-1.4-M1")
-            }
-        }
-    }
-    jvm {
-        compilations.main.kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-}
-
-def BINTRAY_REPOSITORY = "kotlinx-stm-runtime"
-def BINTRAY_ORGINIZATION = "ololoshechkin"
-def ARTIFACT_ID = project.name
-def VCS_URL ="https://github.com/Ololoshechkin/kotlinx-stm.git"
-def SITE_URL ="https://github.com/Ololoshechkin/kotlinx-stm"
-def ISSUE_URL ="https://github.com/Ololoshechkin/kotlinx-stm/issues"
-
-afterEvaluate {
-    task sourcesJar(type: Jar) {g
-        classifier = 'sources'
-        from kotlin.sourceSets.commonMain.kotlin
-    }
-}
-
-project.ext.publishPlatformArtifactsInRootModule = { platformPublication ->
-    afterEvaluate {
-        def platformPomBuilder = null
-
-        platformPublication.pom.withXml { platformPomBuilder = asString() }
-
-        publishing.publications.kotlinMultiplatform {
-            platformPublication.artifacts.forEach {
-                artifact(it)
-            }
-
-            pom.withXml {
-                def pomStringBuilder = asString()
-                pomStringBuilder.setLength(0)
-                // The platform POM needs its artifact ID replaced with the artifact ID of the root module:
-                def platformPomString = platformPomBuilder.toString()
-                platformPomString.eachLine { line ->
-                    if (!line.contains("<!--")) { // Remove the Gradle module metadata marker as it will be added anew
-                        pomStringBuilder.append(line.replace(platformPublication.artifactId, artifactId))
-                        pomStringBuilder.append("\n")
-                    }
-                }
-            }
-        }
-
-        tasks.matching { it.name == "generatePomFileForKotlinMultiplatformPublication"}.configureEach {
-            dependsOn(tasks["generatePomFileFor${platformPublication.name.capitalize()}Publication"])
-        }
-    }
-}
-
-project.ext.pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "JetBrains"
-            name "JetBrains Team"
-            organization "JetBrains"
-            organizationUrl "http://www.jetbrains.com"
-        }
-    }
-
-    scm {
-        url SITE_URL
-    }
-}
-
-project.ext.configureMavenCentralMetadata = { pom ->
-    def root = asNode()
-    root.appendNode('name', project.name)
-    root.appendNode('description', 'Kotlin multiplatform STM runtime library')
-    root.appendNode('url', SITE_URL)
-    root.children().last() + pomConfig
-}
-
-afterEvaluate {
-    publishing {
-        publications.all {
-//            groupId = GROUP_ID
-//            if (it.name.contains('metadata')) {
-//                artifactId = "$ARTIFACT_ID"
-//            } else {
-//                artifactId = "$ARTIFACT_ID-$name"
-//            }
-//
-//            logger.info("Artifact id = ${it.artifactId}, username: ${project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')}")
-
-            def type = it.name
-            logger.info("Configuring $type")
-            switch (type) {
-                case 'kotlinMultiplatform':
-                    it.artifactId = "$ARTIFACT_ID"
-                    publishPlatformArtifactsInRootModule(publications["jvm"])
-                    break
-
-                case 'metadata':
-                    it.artifactId = "$ARTIFACT_ID-common"
-                    break
-
-                case 'jvm':
-                    it.artifactId = "$ARTIFACT_ID-jvm"
-                    break
-
-                case 'js':
-                    it.artifactId = "$ARTIFACT_ID-$type"
-                    break
-            }
-            logger.info("Artifact id = ${it.artifactId}")
-
-            pom.withXml(configureMavenCentralMetadata)
-        }
-
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            url = "https://api.bintray.com/maven/$BINTRAY_ORGINIZATION/$BINTRAY_REPOSITORY/$ARTIFACT_ID/;publish=0"
-
-            credentials {
-                username = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-                password = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-            }
-        }
-    }
-}
-
-task bintrayUpload(dependsOn: publish)
-
-bintrayUpload.dependsOn(build)

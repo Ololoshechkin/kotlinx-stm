@@ -6,6 +6,7 @@ pluginManagement {
         maven { url 'https://kotlin.bintray.com/kotlinx' }
         maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
         jcenter()
+        mavenCentral()
         gradlePluginPortal()
     }
 }
@@ -13,3 +14,8 @@ rootProject.name = 'kotlinx-stm-runtime'
 
 
 enableFeaturePreview('GRADLE_METADATA')
+
+include 'kotlinx-stm-runtime',
+        'scala-stm-impl',
+        'native-stm-runtimes:detached-object-stm-impl'
+

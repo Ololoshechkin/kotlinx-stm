@@ -1,0 +1,201 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://kotlin.bintray.com/kotlin-dev"
+            credentials {
+                username = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER') ?: ""
+                password = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY') ?: ""
+            }
+        }
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '1.4-M2-eap-62'
+}
+
+kotlin {
+    jvm()
+    js {
+        browser {
+        }
+        nodejs {
+        }
+    }
+    // For ARM, should be changed to iosArm32 or iosArm64
+    // For Linux, should be changed to e.g. linuxX64
+    // For MacOS, should be changed to e.g. macosX64
+    // For Windows, should be changed to e.g. mingwX64
+    macosX64("macos")
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('stdlib-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
+        }
+        macosMain {
+        }
+        macosTest {
+        }
+    }
+//    jvm {
+//        compilations.main.kotlinOptions {
+//            jvmTarget = "1.8"
+//        }
+//    }
+}
+
+def BINTRAY_REPOSITORY = "kotlinx-stm-runtime"
+def BINTRAY_ORGINIZATION = "ololoshechkin"
+def ARTIFACT_ID = project.name
+def VCS_URL = "https://github.com/Ololoshechkin/kotlinx-stm.git"
+def SITE_URL = "https://github.com/Ololoshechkin/kotlinx-stm"
+def ISSUE_URL = "https://github.com/Ololoshechkin/kotlinx-stm/issues"
+
+afterEvaluate {
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from kotlin.sourceSets.commonMain.kotlin
+    }
+}
+
+project.ext.publishPlatformArtifactsInRootModule = { platformPublication ->
+    afterEvaluate {
+        def platformPomBuilder = null
+
+        platformPublication.pom.withXml { platformPomBuilder = asString() }
+
+        publishing.publications.kotlinMultiplatform {
+            platformPublication.artifacts.forEach {
+                artifact(it)
+            }
+
+            pom.withXml {
+                def pomStringBuilder = asString()
+                pomStringBuilder.setLength(0)
+                // The platform POM needs its artifact ID replaced with the artifact ID of the root module:
+                def platformPomString = platformPomBuilder.toString()
+                platformPomString.eachLine { line ->
+                    if (!line.contains("<!--")) { // Remove the Gradle module metadata marker as it will be added anew
+                        pomStringBuilder.append(line.replace(platformPublication.artifactId, artifactId))
+                        pomStringBuilder.append("\n")
+                    }
+                }
+            }
+        }
+
+        tasks.matching { it.name == "generatePomFileForKotlinMultiplatformPublication" }.configureEach {
+            dependsOn(tasks["generatePomFileFor${platformPublication.name.capitalize()}Publication"])
+        }
+    }
+}
+
+project.ext.pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "JetBrains"
+            name "JetBrains Team"
+            organization "JetBrains"
+            organizationUrl "http://www.jetbrains.com"
+        }
+    }
+
+    scm {
+        url SITE_URL
+    }
+}
+
+project.ext.configureMavenCentralMetadata = { pom ->
+    def root = asNode()
+    root.appendNode('name', project.name)
+    root.appendNode('description', 'Kotlin multiplatform STM runtime library')
+    root.appendNode('url', SITE_URL)
+    root.children().last() + pomConfig
+}
+
+afterEvaluate {
+    publishing {
+        publications.all {
+            def type = it.name
+            logger.info("Configuring $type (initially, it.artifactId = $it.artifactId)")
+            switch (type) {
+                case 'kotlinMultiplatform':
+                    logger.info("!kotlinMultiplatform case!")
+                    it.artifactId = "$ARTIFACT_ID"
+                    publishPlatformArtifactsInRootModule(publications["jvm"])
+                    break
+
+                case 'metadata':
+                    logger.info("!metadata case!")
+                    it.artifactId = "$ARTIFACT_ID-common"
+                    break
+
+                case 'jvm':
+                    logger.info("!jvm case!")
+                    it.artifactId = "$ARTIFACT_ID-jvm"
+                    break
+
+                case 'js':
+                    logger.info("!js case!")
+                    it.artifactId = "$ARTIFACT_ID-$type"
+                    break
+            }
+            logger.info("Artifact id = ${it.artifactId}")
+
+            pom.withXml(configureMavenCentralMetadata)
+        }
+
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = "https://api.bintray.com/maven/$BINTRAY_ORGINIZATION/$BINTRAY_REPOSITORY/$ARTIFACT_ID/;publish=0"
+
+            credentials {
+                username = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+                password = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+            }
+        }
+    }
+}
+
+task bintrayUpload(dependsOn: publish)
+
+bintrayUpload.dependsOn(build)
