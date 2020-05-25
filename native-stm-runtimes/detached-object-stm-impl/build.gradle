@@ -35,13 +35,13 @@ kotlin {
     sourceSets {
         macosMain {
             dependencies {
-                implementation 'org.jetbrains.kotlinx:atomicfu-native:0.14.3-1.4-M1'
+                implementation 'org.jetbrains.kotlinx:atomicfu-native:9995'
                 implementation project(':kotlinx-stm-runtime')
             }
         }
         macosTest {
             dependencies {
-                implementation 'org.jetbrains.kotlinx:atomicfu-native:0.14.3-1.4-M1'
+                implementation 'org.jetbrains.kotlinx:atomicfu-native:9995'
                 implementation project(':kotlinx-stm-runtime')
             }
         }
