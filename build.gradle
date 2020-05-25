@@ -18,7 +18,7 @@ subprojects {
 
 subprojects {
     def GROUP_ID = 'org.jetbrains.kotlinx'
-    def LIBRARY_VERSION_NAME = '0.0.1-tmp5'
+    def LIBRARY_VERSION_NAME = '0.0.1-tmp6'
 
     group GROUP_ID
     version LIBRARY_VERSION_NAME
