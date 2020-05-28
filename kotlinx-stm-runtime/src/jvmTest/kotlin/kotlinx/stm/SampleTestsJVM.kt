@@ -16,22 +16,22 @@ class User(fname: String, lname: String) {
     fun _set_larstName_Shared(ctx: STMContext, newValue: String) = stm.setVar(ctx, lastName, newValue)
 }
 
-class SampleTestsJVM {
-
-    fun a(u: User, ctx: STMContext) {
-        println("atomic user is: ${u._get_firstName_Shared(ctx)} ${u._get_lastName_Shared(ctx)}")
-    }
-
-    @Test
-    fun testG() {
-        val u = User("Vadim", "Briliantov")
-
-        runAtomically(stm = findJavaSTMDefault()) {
-            val tmp = u._get_firstName_Shared(this)
-            u._set_firstName_Shared(this, u._get_lastName_Shared(this))
-            u._set_larstName_Shared(this, tmp)
-
-            a(u, this)
-        }
-    }
-}
+//class SampleTestsJVM {
+//
+//    fun a(u: User, ctx: STMContext) {
+//        println("atomic user is: ${u._get_firstName_Shared(ctx)} ${u._get_lastName_Shared(ctx)}")
+//    }
+//
+//    @Test
+//    fun testG() {
+//        val u = User("Vadim", "Briliantov")
+//
+//        runAtomically(stm = findJavaSTMDefault()) {
+//            val tmp = u._get_firstName_Shared(this)
+//            u._set_firstName_Shared(this, u._get_lastName_Shared(this))
+//            u._set_larstName_Shared(this, tmp)
+//
+//            a(u, this)
+//        }
+//    }
+//}

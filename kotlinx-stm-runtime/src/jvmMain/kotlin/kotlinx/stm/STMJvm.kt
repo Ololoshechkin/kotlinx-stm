@@ -2,4 +2,4 @@
 
 package kotlinx.stm
 
-fun findJavaSTMDefault(): STM = DummySTM
+fun findJavaSTMDefault(): STM = throw UnsupportedOperationException("findJavaSTMDefault not supported!")

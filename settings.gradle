@@ -16,6 +16,6 @@ rootProject.name = 'kotlinx-stm-runtime'
 enableFeaturePreview('GRADLE_METADATA')
 
 include 'kotlinx-stm-runtime',
-        'java-stm-runtimes:scala-stm-impl',
-        'native-stm-runtimes:detached-object-stm-impl'
+        'jvm-stm-runtimes:scala-stm-impl'
+//        'native-stm-runtimes:detached-object-stm-impl'
 
