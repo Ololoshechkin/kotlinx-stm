@@ -86,12 +86,12 @@ object DummySTM : STM() {
 
 // Note: functions annotated as @TemporaryIrFunction will be replaced during IR transformation
 @Target(AnnotationTarget.FUNCTION)
-annotation class TemporaryIrFunction
+annotation class ReplaceableAtomicFunction
 
 fun <T> runAtomically(stm: STM, block: STMContext.() -> T): T =
     stm.runAtomically(null, block)
 
-@TemporaryIrFunction
+@ReplaceableAtomicFunction
 fun <T> runAtomically(block: STMContext.() -> T): T =
     throw IllegalStateException("Method runAtomically must never be called without IR transformation")
 
